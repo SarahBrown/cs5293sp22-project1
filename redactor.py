@@ -74,7 +74,8 @@ stats = []
 args = add_arguments()
 input_files = get_inputfiles(args.input)
 
+redact(args)
 
-if (args.output):
+if (args.stats):
     for inp in input_files:
         print(inp.stats_string())
