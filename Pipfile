@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 spacy = ">=3.0.0,<4.0.0"
 en-core-web-sm = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz"}
+en-core-web-md = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.0.0/en_core_web_md-3.0.0.tar.gz"}
+en-core-web-lg = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.0.0/en_core_web_lg-3.0.0.tar.gz"}
+nltk = "*"
 
 [dev-packages]
 

@@ -50,31 +50,31 @@ def get_inputfiles(input_glob):
 
     return file_list
 
-def redact(args):
+def redact(args, input_file):
     if (args.names): # checks names flag to see if true
-        names_redacted = project1.redact_names(input_files)
+        input_file = project1.redact_names(input_file)
 
     if (args.genders):
-        genders_redacted = project1.redact_genders(input_files)
+        input_file = project1.redact_genders(input_file)
 
     if (args.dates):
-        dates_redacted = project1.redact_dates(input_files)
+        input_file = project1.redact_dates(input_file)
 
     if (args.phones):
-        phones_redacted = project1.redact_phones(input_files)
+        input_file = project1.redact_phones(input_file)
 
     if (args.address):
-        address_redacted = project1.redact_address(input_files)
+        input_file = project1.redact_address(input_file)
 
     if (args.concept):
-        concept_redacted = project1.redact_concepts(input_files)
+        input_file = project1.redact_concepts(input_file, args.concept)
 
 stats = []
 
 args = add_arguments()
 input_files = get_inputfiles(args.input)
 
-redact(args)
+input_files = redact(args, input_files)
 
 if (args.stats):
     for inp in input_files:
