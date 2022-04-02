@@ -1,39 +1,26 @@
 import spacy
 import en_core_web_lg
+import re
 
 nlp = en_core_web_lg.load()
 
 def redact_names(input_files):
-    redact_names_debug = True
     for inp in input_files:
         doc_lg = nlp(inp.input_str)
         names = []
         PROPN_ENT = []
         ENTS = []
-        tok = []
-
-        for token in doc_lg:
-            if (token.pos_ == "PROPN"):
-                tok.append([token.text, token.i, token.idx, len(token.text)])
-
-        #print(tok)
-        #print("\n")
 
         # check for entities in document
-        if (redact_names_debug):
-            print("\nents lg")
         for ent in doc_lg.ents:
             if (ent.label_ == "PERSON"):
                 ent_label = ent.text.split("\n")[0] # removes any new lines from name
                 if (ent_label[-1] == " "): # removes any extra spaces from name
                     ent_label = ent_label[0:-1]
                 ENTS.append([ent_label, ent.start, ent.start_char, len(ent_label)])
-        if (redact_names_debug):
-            print(ENTS)
+
 
         # get document tokens and then check NER 
-        if (redact_names_debug):
-            print("\ntoken & ents")
         for token in doc_lg:
             if (token.pos_ == "PROPN"):
                 tok_test = nlp(token.text)
@@ -42,35 +29,19 @@ def redact_names(input_files):
                     if (ent.label_ == "PERSON"):
                         PROPN_ENT.append([token.text, token.i, token.idx, len(token.text)])
                     
-        if (redact_names_debug):
-            print(PROPN_ENT)
-
-        if (redact_names_debug):
-            print("\nmerged")
-        # merge lists
-        # names = ENTS.copy()
-        # names_len = range(len(names))
-        # for name_propn in PROPN_ENT:
-        #     skip_flag = False
-        #     for i in names_len:
-        #         if (redact_names_debug):
-        #             print(f"{name_propn[1]}---{names[i][1]}")
-        #         if (abs(name_propn[1] - names[i][1]) < 2): # checks to see if i indexes are within 0 or 1 values of each other
-        #             skip_flag = True
-        #             if (redact_names_debug):
-        #                 print(f"removing: {name_propn}")
-        #                 print(f"{PROPN_ENT}\n")
-        #             break
-        #     if (not skip_flag):      
-        #         if (redact_names_debug):
-        #             print(f"adding: {name_propn}")
-        #         names.append(name_propn)
         names = merge_lists(ENTS, PROPN_ENT)        
 
         print(inp.file_name)
         print(names)
         print("\n")
-        
+
+        regex_names = []
+        for name in names:
+            regex_names.append(name[0])
+
+        for reg_name in regex_names:
+            x = re.search(reg_name, inp.input_str)
+            print(x)
 
     return input_files
 
