@@ -39,7 +39,7 @@ def add_arguments():
     return args
 
 def get_inputfiles(input_glob):
-    files = glob.glob(input_glob)
+    files = sorted(glob.glob(input_glob)) # reads in glob files and sorts them alphabetically for ease of debugging
     file_list = []
 
     for f in files:
@@ -54,19 +54,19 @@ def redact(args, input_file):
     if (args.names): # checks names flag to see if true
         input_file = project1.redact_names(input_file)
 
-    if (args.genders):
+    if (args.genders): # checks genders flag to see if true
         input_file = project1.redact_genders(input_file)
 
-    if (args.dates):
+    if (args.dates): # checks dates flag to see if true
         input_file = project1.redact_dates(input_file)
 
-    if (args.phones):
+    if (args.phones): # checks phones flag to see if true
         input_file = project1.redact_phones(input_file)
 
-    if (args.address):
+    if (args.address): # checks address flag to see if true
         input_file = project1.redact_address(input_file)
 
-    if (args.concept):
+    if (args.concept): # checks concept flag to see if true
         input_file = project1.redact_concepts(input_file, args.concept)
 
 stats = []

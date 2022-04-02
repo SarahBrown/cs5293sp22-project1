@@ -1,65 +1,95 @@
 import spacy
-#import nltk
+import en_core_web_lg
 
-nlp = spacy.load("en_core_web_lg")
+nlp = en_core_web_lg.load()
 
-def redact_namesv1(input_files):
+def redact_names(input_files):
+    redact_names_debug = True
     for inp in input_files:
-        doc = nlp(inp.input_str)
+        doc_lg = nlp(inp.input_str)
+        names = []
+        PROPN_ENT = []
+        ENTS = []
+        tok = []
 
-        print("---------spacy---------")
-        for ent in doc.ents:
-            if (ent.label_ == "PERSON"): #and (not "_" in ent.text)):
-                print(f"{ent.text}--{ent.label_}--{ent.start_char}--{ent.end_char}")
-            else:
-                print(f"-----{ent.text}--{ent.label_}")
-        
-        print("---------POS---------")
-        for token in doc:
+        for token in doc_lg:
             if (token.pos_ == "PROPN"):
-                print(f"{token.text}--PROPN--{token.i}")
+                tok.append([token.text, token.i, token.idx, len(token.text)])
 
-        print("---------POS & ent---------")
-        for token in doc:
+        #print(tok)
+        #print("\n")
+
+        # check for entities in document
+        if (redact_names_debug):
+            print("\nents lg")
+        for ent in doc_lg.ents:
+            if (ent.label_ == "PERSON"):
+                ent_label = ent.text.split("\n")[0] # removes any new lines from name
+                if (ent_label[-1] == " "): # removes any extra spaces from name
+                    ent_label = ent_label[0:-1]
+                ENTS.append([ent_label, ent.start, ent.start_char, len(ent_label)])
+        if (redact_names_debug):
+            print(ENTS)
+
+        # get document tokens and then check NER 
+        if (redact_names_debug):
+            print("\ntoken & ents")
+        for token in doc_lg:
             if (token.pos_ == "PROPN"):
                 tok_test = nlp(token.text)
 
                 for ent in tok_test.ents:
                     if (ent.label_ == "PERSON"):
-                        print(f"{token.text}--{ent.label_}--{token.i}")
-                    else:
-                        print(f"-----{ent.text}--{ent.label_}")
+                        PROPN_ENT.append([token.text, token.i, token.idx, len(token.text)])
+                    
+        if (redact_names_debug):
+            print(PROPN_ENT)
 
-    return input_files
+        if (redact_names_debug):
+            print("\nmerged")
+        # merge lists
+        # names = ENTS.copy()
+        # names_len = range(len(names))
+        # for name_propn in PROPN_ENT:
+        #     skip_flag = False
+        #     for i in names_len:
+        #         if (redact_names_debug):
+        #             print(f"{name_propn[1]}---{names[i][1]}")
+        #         if (abs(name_propn[1] - names[i][1]) < 2): # checks to see if i indexes are within 0 or 1 values of each other
+        #             skip_flag = True
+        #             if (redact_names_debug):
+        #                 print(f"removing: {name_propn}")
+        #                 print(f"{PROPN_ENT}\n")
+        #             break
+        #     if (not skip_flag):      
+        #         if (redact_names_debug):
+        #             print(f"adding: {name_propn}")
+        #         names.append(name_propn)
+        names = merge_lists(ENTS, PROPN_ENT)        
 
-def redact_names(input_files):
-    for inp in input_files:
-        doc = nlp(inp.input_str)
-        propn = []
-
-        for token in doc:
-            if (token.tag_ == "NNP"):
-                propn.append([token.text, token.i])
+        print(inp.file_name)
+        print(names)
+        print("\n")
         
-        print(propn)
-
-        # for ent in doc.ents:
-        #     if (ent.label_ == "PERSON"): #and (not "_" in ent.text)):
-        #         print(f"{ent.text}--{ent.label_}--{ent.start_char}--{ent.end_char}")
-
-
-        # print("---------POS & ent---------")
-        # for token in doc:
-        #     if (token.pos_ == "PROPN"):
-        #         tok_test = nlp(token.text)
-
-        #         for ent in tok_test.ents:
-        #             if (ent.label_ == "PERSON"):
-        #                 print(f"{token.text}--{ent.label_}--{token.i}")
-        #             else:
-        #                 print(f"-----{ent.text}--{ent.label_}")
 
     return input_files
+
+def merge_lists(list1, list2):
+    merged = list1.copy()
+    list1_range = range(len(list1))
+
+    for item in list2:
+        skip_flag = False
+        
+        for i in list1_range:
+            if (abs(item[1] - list1[i][1]) < 2):
+                skip_flag = True
+                break
+        
+        if (not skip_flag):
+            merged.append(item)
+
+    return merged    
 
 def redact_genders(input_files):
     for inp in input_files:
@@ -72,10 +102,6 @@ def redact_genders(input_files):
                     propn.append([token.text, token.i])
 
     print(propn)
-
-    test = nlp("Mailwoman")
-    for token in test:
-        print(f"{token.text}--{token.lemma_}")
 
     return input_files
 
@@ -102,4 +128,6 @@ def redact_concepts(input_files, concept):
             if (token and token.vector_norm): # checks for valid word vector
                 simil = nlp_concept.similarity(token)
                 if (simil > 0.5):
-                    print(f"{token}--{simil}")
+                    print("\n")
+                    print(f"{token}--{simil}--{token.i}")
+                    print(f"---------{token.sent}")
