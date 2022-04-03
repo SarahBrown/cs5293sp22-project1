@@ -35,6 +35,14 @@ Concepts are a selected, singular word to represent an idea to be redacted.
 
 
 # Assumptions Made and Known Bugs
+## Assumptions About Phone Numbers
+Phone numbers are assumed to be formatted in standard US format. Supported formats are local 7 digit numbers and various forms of full US numbers. Also supported is the 1-800 format. See below for examples of supported formats.
+* xxx-xxxx
+* xxx xxx xxxx
+* xxx-xxx-xxxx
+* (xxx) xxx-xxxx
+* +x-xxx-xxx-xxx
+* x-xxx-xxx-xxx
 
 
 # Tests

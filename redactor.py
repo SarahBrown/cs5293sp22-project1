@@ -1,5 +1,7 @@
 import argparse
 import glob
+import sys
+import os
 
 from project1 import project1
 from project1 import FileStats
@@ -52,30 +54,58 @@ def get_inputfiles(input_glob):
 
 def redact(args, input_file):
     if (args.names): # checks names flag to see if true
-        input_file = project1.redact_names(input_file)
+        project1.redact_names(input_file)
 
     if (args.genders): # checks genders flag to see if true
-        input_file = project1.redact_genders(input_file)
+        project1.redact_genders(input_file)
 
     if (args.dates): # checks dates flag to see if true
-        input_file = project1.redact_dates(input_file)
+        project1.redact_dates(input_file)
 
     if (args.phones): # checks phones flag to see if true
-        input_file = project1.redact_phones(input_file)
+        project1.redact_phones(input_file)
 
     if (args.address): # checks address flag to see if true
-        input_file = project1.redact_address(input_file)
+        project1.redact_address(input_file)
 
     if (args.concept): # checks concept flag to see if true
-        input_file = project1.redact_concepts(input_file, args.concept)
-
-stats = []
+        project1.redact_concepts(input_file, args.concept)
+    
+    for inp in input_file:
+        inp.redact_output_str()
 
 args = add_arguments()
 input_files = get_inputfiles(args.input)
+redact(args, input_files)
 
-input_files = redact(args, input_files)
+if (args.output):
+    for inp in input_files:
+        if (args.output == 'stderr'):
+            sys.stderr.write(inp.output_str)
+        elif (args.output == 'stdout'):
+            sys.stdout.write(inp.output_str)
+        else:
+            if (not os.path.exists(args.output)):
+                break
+            out_filename = f"{args.output}/{inp.file_name.split('/')[1]}.redacted"
+            if os.path.exists(out_filename):
+                os.remove(out_filename)
+            output_file = open(out_filename,"x")
+            output_file.write(inp.output_str)
+            output_file.close()
 
 if (args.stats):
-    for inp in input_files:
-        print(inp.stats_string())
+    if (args.stats == 'stderr' or args.stats == 'stdout'):
+        for inp in input_files:
+            if (args.stats == 'stderr'):
+                sys.stderr.write(inp.formatted_stats_string())
+            elif (args.stats == 'stdout'):
+                sys.stdout.write(inp.formatted_stats_string())
+    else:
+        out_filename = f"{args.stats}"
+        if os.path.exists(out_filename):
+            os.remove(out_filename)
+        output_file = open(out_filename,"x")
+        for inp in input_files:
+            output_file.write(inp.formatted_stats_string())
+        output_file.close()

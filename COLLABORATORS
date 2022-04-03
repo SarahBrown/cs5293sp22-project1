@@ -1,4 +1,14 @@
 Python Docs, https://docs.python.org/3/howto/argparse.html, argparse help
 https://stackoverflow.com/questions/59048736/spacy-how-to-get-position-of-entity-in-the-entire-document
 https://stackoverflow.com/questions/55921104/spacy-similarity-warning-evaluating-doc-similarity-based-on-empty-vectors
-https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
+https://github.com/explosion/spaCy/blob/master/spacy/glossary.py, glossary for spacy
+https://www.tutorialspoint.com/How-to-write-a-case-insensitive-Python-regular-expression-without-re-compile
+https://stackoverflow.com/questions/3519565/find-the-indexes-of-all-regex-matches, get indexes of all matches
+https://www.w3schools.com/python/gloss_python_regex_match.asp
+https://tutorial.eyehunts.com/python/python-multiline-f-string-example-code/
+https://grabthiscode.com/python/python-remove-non-letters-from-string
+https://stdcxx.apache.org/doc/stdlibug/26-1.html, example phone number formats
+https://regexpattern.com/phone-number/
+https://stackoverflow.com/questions/41752946/replacing-a-character-from-a-certain-index, 
+https://stackoverflow.com/questions/59799454/what-is-the-difference-between-stdout-and-stderr-in-c, double checked differencs between stdout and stderr
+https://www.w3schools.com/python/python_file_write.asp, create file to write to
