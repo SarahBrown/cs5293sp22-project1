@@ -45,25 +45,35 @@ def redact_names(input_files):
 
 
         # searches input text string for matches to regex set
-        name_matches = find_regex(regex_names, inp.input_str)
-        # merges both lists so multiple name (eg first and last) items are together
+        name_matches = find_regex(regex_names, inp.input_str, False)
+        # merges both lists so multiple name (eg first and last) items arfe together
         name_matches = merge_lists(names, name_matches)
         # add input files redactions to stats file
         inp.add_redact(name_matches, "names")
 
 def redact_genders(input_files):
     for inp in input_files:
-        doc = nlp(inp.input_str)
-        propn = []
+        genders = []
+        formatted_terms = []
+        gendered_terms = ["father","mother","son","daughter","boy","girl","man","woman","dad","mom","husband",
+        "wife","sister","brother","widow","widower","bride","groom","bachelor","bachelorette","father-in-law",
+        "mother-in-law","lady","lord","gentleman","king","queen","grandfather","grandmother","uncle","aunt",
+        "niece","nephew","host","hostess","heir","heiress","duke","duchess","earl","countess","count","headmaster",
+        "headmistress","mistress","mister","lad","lass","landlord","landlady","male",
+        "female","miss","sir","madam","ma'am","son-in-law","daughter-in-law","prince","princess","stepfather",
+        "stepmother","stepson","stepdaughter","waiter","waiteress","she","her","hers","he","him","his"]
+        gender_titles=["\\bmrs\.","\\bms\.","\\bmr\.",]
 
-        for token in doc:
-            if (token.tag_ == "PRP" or token.tag_ == "PRP$"):
-                if (token.text in ["she","She","her","Her","hers","Hers","he","He","him","Him","his","His"]):
-                    propn.append([token.text, token.i])
+        for term in gendered_terms:
+            formatted_terms.append("\\b"+term+"s{0,1}\\b")
 
-    print(propn)
+        genders = find_regex(formatted_terms, inp.input_str, True)
+        found_titles = find_regex(gender_titles, inp.input_str, True)
 
-    return input_files
+        for found in found_titles:
+            genders.append(found)
+
+        inp.add_redact(genders, "genders")
 
 def redact_dates(input_files):
     for inp in input_files:
@@ -83,7 +93,7 @@ def redact_phones(input_files):
             r"[+1(-]{0,3}[0-9]{0,3}[- )]{1,2}[0-9]{3}[- ][0-9]{4}",
         }
 
-        phones = find_regex(phone_patterns, inp.input_str)
+        phones = find_regex(phone_patterns, inp.input_str,False)
         print(phones)
         print(len(phones))
         if (len(phones)>0):
@@ -140,10 +150,13 @@ def merge_lists(list1, list2):
 
     return merged
 
-def find_regex(reg_set, input_str):
+def find_regex(reg_set, input_str, ignore_case):
     matches = []
     for reg in reg_set:
-        iter = re.finditer(reg, input_str) # pattern, string, flags
+        if (ignore_case):
+            iter = re.finditer(reg, input_str, re.IGNORECASE) # pattern, string, flags
+        else:
+            iter = re.finditer(reg, input_str) # pattern, string, flags
         for match in iter:
             matches.append([match.group(), match.span()[0], match.span()[1]]) # string text, dx from start, string end char 
 
