@@ -61,7 +61,7 @@ def redact_genders(input_files):
         "headmistress","mistress","mister","lad","lass","landlord","landlady","male",
         "female","miss","sir","madam","ma'am","son-in-law","daughter-in-law","prince","princess","stepfather",
         "stepmother","stepson","stepdaughter","waiter","waiteress","she","her","hers","he","him","his"]
-        gender_titles=["\\bmrs\.","\\bms\.","\\bmr\.",]
+        gender_titles=[r'\\bmrs\.',r'\\bms\.',r'\\bmr\.']
 
         for term in gendered_terms:
             formatted_terms.append("\\b"+term+"s{0,1}\\b")
@@ -84,6 +84,7 @@ def redact_dates(input_files):
                 if ((not re.search(r"[0-9]+",ent.text) == None) and (re.search(r"@",ent.text) == None)): # filters to DATE labels not including @ and with a number in them
                     dates.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
 
+
         inp.add_redact(dates, "dates")
 
 def redact_phones(input_files):
@@ -93,8 +94,6 @@ def redact_phones(input_files):
         }
 
         phones = find_regex(phone_patterns, inp.input_str,False)
-        print(phones)
-        print(len(phones))
         if (len(phones)>0):
             inp.add_redact(phones, "phones")
 
@@ -107,6 +106,7 @@ def redact_address(input_files):
             if (ent.label_ == "LOC"):
                 ENTS.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
                 print(re.sub("\n","(NL)",ent.text))
+        
 
 def redact_concepts(input_files, concept):
     for inp in input_files:
