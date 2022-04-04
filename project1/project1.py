@@ -33,7 +33,6 @@ def redact_names(input_files):
                     
         # merges two lists for all names recognized by NER
         names = merge_lists(ENTS, PROPN_ENT)        
-        print(names)
 
         # takes combined list and creates a set of names to search document via regex
         regex_names = set()
@@ -78,14 +77,14 @@ def redact_genders(input_files):
 def redact_dates(input_files):
     for inp in input_files:
         doc = nlp(inp.input_str)
-        ENTS = []
+        dates = []
 
         for ent in doc.ents:
             if (ent.label_ == "DATE"):
-                ENTS.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
-                print(re.sub("\n","(NL)",ent.text))
+                if ((not re.search(r"[0-9]+",ent.text) == None) and (re.search(r"@",ent.text) == None)): # filters to DATE labels not including @ and with a number in them
+                    dates.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
 
-        print("\n")
+        inp.add_redact(dates, "dates")
 
 def redact_phones(input_files):
     for inp in input_files:
