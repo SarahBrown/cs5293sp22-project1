@@ -30,9 +30,10 @@ def redact_names(input_files):
                 for ent in tok_test.ents:
                     if (ent.label_ == "PERSON"):
                         PROPN_ENT.append([tok_text, token.idx, token.idx+len(tok_text)]) # string text, start char, end char
-
+                    
         # merges two lists for all names recognized by NER
         names = merge_lists(ENTS, PROPN_ENT)        
+        print(names)
 
         # takes combined list and creates a set of names to search document via regex
         regex_names = set()
@@ -40,7 +41,8 @@ def redact_names(input_files):
             name_parts = name[0].split(" ") # splits strings to individually search for first/last name
             for part in name_parts:
                 if (len((re.sub("[^a-zA-Z]+", "",part))) > 1):
-                    regex_names.add(part)
+                    regex_names.add("\\b"+part+"\\b")
+
 
         # searches input text string for matches to regex set
         name_matches = find_regex(regex_names, inp.input_str)
@@ -48,34 +50,6 @@ def redact_names(input_files):
         name_matches = merge_lists(names, name_matches)
         # add input files redactions to stats file
         inp.add_redact(name_matches, "names")
-
-def merge_lists(list1, list2):
-    merged = list1.copy()
-    list1_range = range(len(list1))
-
-    for item in list2:
-        skip_flag = False
-        item_len = item[2]-item[1]
-
-        for i in list1_range:
-            len_i = list1[i][2]-list1[i][1]
-            if ((item[1]==list1[i][1]) or (item[1]+item_len+1==list1[i][1]) or (list1[i][1]+len_i+1==item[1])):
-                skip_flag = True
-                break
-        
-        if (not skip_flag):
-            merged.append(item)
-
-    return merged
-
-def find_regex(reg_set, input_str):
-    matches = []
-    for reg in reg_set:
-        iter = re.finditer(reg, input_str, re.IGNORECASE)
-        for match in iter:
-            matches.append([match.group(), match.span()[0], match.span()[1]]) # string text, dx from start, string end char 
-
-    return matches   
 
 def redact_genders(input_files):
     for inp in input_files:
@@ -91,7 +65,6 @@ def redact_genders(input_files):
 
     return input_files
 
-
 def redact_dates(input_files):
     for inp in input_files:
         doc = nlp(inp.input_str)
@@ -103,7 +76,6 @@ def redact_dates(input_files):
                 print(re.sub("\n","(NL)",ent.text))
 
         print("\n")
-
 
 def redact_phones(input_files):
     for inp in input_files:
@@ -127,7 +99,6 @@ def redact_address(input_files):
                 ENTS.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
                 print(re.sub("\n","(NL)",ent.text))
 
-
 def redact_concepts(input_files, concept):
     for inp in input_files:
         doc = nlp(inp.input_str)
@@ -149,3 +120,31 @@ def redact_concepts(input_files, concept):
             sent_added.add(similar_tok[1])
             sentences.append(similar_tok)
     inp.add_redact(sentences, "concept")
+
+def merge_lists(list1, list2):
+    merged = list1.copy()
+    list1_range = range(len(list1))
+
+    for item in list2:
+        skip_flag = False
+        item_len = item[2]-item[1]
+
+        for i in list1_range:
+            len_i = list1[i][2]-list1[i][1]
+            if ((item[1]==list1[i][1]) or (item[1]+item_len+1==list1[i][1]) or (list1[i][1]+len_i+1==item[1])):
+                skip_flag = True
+                break
+        
+        if (not skip_flag):
+            merged.append(item)
+
+    return merged
+
+def find_regex(reg_set, input_str):
+    matches = []
+    for reg in reg_set:
+        iter = re.finditer(reg, input_str) # pattern, string, flags
+        for match in iter:
+            matches.append([match.group(), match.span()[0], match.span()[1]]) # string text, dx from start, string end char 
+
+    return matches   
