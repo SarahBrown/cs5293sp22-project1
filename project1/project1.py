@@ -2,8 +2,13 @@ from errno import ENOTSOCK
 import spacy
 import en_core_web_lg
 import re
+import nltk
 
 nlp = en_core_web_lg.load()
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
 
 def redact_names(input_files):
     for inp in input_files:
@@ -15,6 +20,7 @@ def redact_names(input_files):
         # check for entities in document
         for ent in doc_lg.ents:
             if (ent.label_ == "PERSON"):
+                print(ent.text)
                 ent_label = ent.text.split("\n")[0] # removes any new lines from name
                 ent_label = ent_label.split("<")[0] # removes any non-name parts from email header
                 while (ent_label[-1] == " "): # removes any extra spaces from end of name
@@ -29,7 +35,18 @@ def redact_names(input_files):
 
                 for ent in tok_test.ents:
                     if (ent.label_ == "PERSON"):
+                        print(tok_text)
                         PROPN_ENT.append([tok_text, token.idx, token.idx+len(tok_text)]) # string text, start char, end char
+
+        sentences = nltk.sent_tokenize(inp.input_str)
+        sentences = [nltk.word_tokenize(sent) for sent in sentences]
+        sentences = [nltk.pos_tag(sent) for sent in sentences]
+
+        for tagged_sentence in sentences:
+            for chunk in nltk.ne_chunk(tagged_sentence):
+                if type(chunk) == nltk.tree.Tree:
+                    if chunk.label() == 'PERSON':
+                        print(chunk)
                     
         # merges two lists for all names recognized by NER
         names = merge_lists(ENTS, PROPN_ENT)        
@@ -58,7 +75,7 @@ def redact_genders(input_files):
         "wife","sister","brother","widow","widower","bride","groom","bachelor","bachelorette","father-in-law",
         "mother-in-law","lady","lord","gentleman","king","queen","grandfather","grandmother","uncle","aunt",
         "niece","nephew","host","hostess","heir","heiress","duke","duchess","earl","countess","count","headmaster",
-        "headmistress","mistress","mister","lad","lass","landlord","landlady","male",
+        "headmistress","mistress","mister","lad","lass","landlord","landlady","male","girlfriend","boyfriend"
         "female","miss","sir","madam","ma'am","son-in-law","daughter-in-law","prince","princess","stepfather",
         "stepmother","stepson","stepdaughter","waiter","waiteress","she","her","hers","he","him","his"]
         gender_titles=[r'\\bmrs\.',r'\\bms\.',r'\\bmr\.']
@@ -77,15 +94,30 @@ def redact_genders(input_files):
 def redact_dates(input_files):
     for inp in input_files:
         doc = nlp(inp.input_str)
-        dates = []
+        ent_dates = []
+        date_patterns = [r'[A-Z][a-z]{2}, [0-9]{1,2} [A-Z][a-z]{2} [0-9]{4}']
 
         for ent in doc.ents:
             if (ent.label_ == "DATE"):
-                if ((not re.search(r"[0-9]+",ent.text) == None) and (re.search(r"@",ent.text) == None)): # filters to DATE labels not including @ and with a number in them
-                    dates.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
+                if ((re.search(r"@",ent.text) == None)): # filters to DATE labels not including @ 
+                    end_char = ent.start_char+len(ent.text)
+                    added = False
+                    if (end_char + 5 < len(inp.input_str)): # checks to make sure not going outside of len of txt doc
+                        etc_char = ""
+                        for i in range(end_char,end_char+5):
+                            etc_char = etc_char + (inp.input_str[i]) # creates a string with characters that follow
+                        
+                        if (re.match(r' & [0-9]{1,2}', etc_char)): # checkes to see if matches month day & day format
+                            ent_dates.append([ent.text+etc_char, ent.start_char, end_char+5]) # string text, start char, end char
+                            added = True
+                    if (not added): # checks if ent has been added in the above check for extra characters
+                        ent_dates.append([ent.text, ent.start_char, end_char]) # string text, start char, end char
 
+        # checks for other dates matching regex format and merges lists
+        other_dates = find_regex(date_patterns , inp.input_str, True)
+        dates = merge_lists(other_dates, ent_dates)
 
-        inp.add_redact(dates, "dates")
+        inp.add_redact(dates, "dates") # add redacted dates to stats object
 
 def redact_phones(input_files):
     for inp in input_files:
