@@ -135,12 +135,14 @@ def redact_address(input_files):
     for inp in input_files:
         doc = nlp(inp.input_str)
         ENTS = []
+        nltk_addy = []
 
         for ent in doc.ents:
             if (ent.label_ == "LOC"):
                 ENTS.append([ent.text, ent.start_char, ent.start_char+len(ent.text)]) # string text, start char, end char
                 print(re.sub("\n","(NL)",ent.text))
-        
+
+    pattern = [{},{},{}]
 
 def redact_concepts(input_files, concept):
     for inp in input_files:
