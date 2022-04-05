@@ -5,10 +5,6 @@ import re
 import nltk
 
 nlp = en_core_web_lg.load()
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
-nltk.download('words')
 
 def redact_names(input_files):
     for inp in input_files:
@@ -16,11 +12,11 @@ def redact_names(input_files):
         names = []
         PROPN_ENT = []
         ENTS = []
+        nltk_names = []
 
         # check for entities in document
         for ent in doc_lg.ents:
             if (ent.label_ == "PERSON"):
-                print(ent.text)
                 ent_label = ent.text.split("\n")[0] # removes any new lines from name
                 ent_label = ent_label.split("<")[0] # removes any non-name parts from email header
                 while (ent_label[-1] == " "): # removes any extra spaces from end of name
@@ -35,7 +31,6 @@ def redact_names(input_files):
 
                 for ent in tok_test.ents:
                     if (ent.label_ == "PERSON"):
-                        print(tok_text)
                         PROPN_ENT.append([tok_text, token.idx, token.idx+len(tok_text)]) # string text, start char, end char
 
         sentences = nltk.sent_tokenize(inp.input_str)
@@ -46,7 +41,11 @@ def redact_names(input_files):
             for chunk in nltk.ne_chunk(tagged_sentence):
                 if type(chunk) == nltk.tree.Tree:
                     if chunk.label() == 'PERSON':
-                        print(chunk)
+                        found_name = chunk.leaves()[0][0]
+                        if (re.search(r'[0-9]',found_name) == None): # contains no numbers
+                            if (found_name not in ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]): # removes days of week abbreivations
+                                nltk_names.append(found_name)
+                            
                     
         # merges two lists for all names recognized by NER
         names = merge_lists(ENTS, PROPN_ENT)        
@@ -57,13 +56,16 @@ def redact_names(input_files):
             name_parts = name[0].split(" ") # splits strings to individually search for first/last name
             for part in name_parts:
                 if (len((re.sub("[^a-zA-Z]+", "",part))) > 1):
-                    regex_names.add("\\b"+part+"\\b")
+                    regex_names.add("\\b"+part+"\\b") # to avoid getting forever when searching for eve
+            for nltk_n in nltk_names:
+                regex_names.add("\\b"+nltk_n+"\\b") # to avoid getting forever when searching for eve
 
 
         # searches input text string for matches to regex set
         name_matches = find_regex(regex_names, inp.input_str, False)
         # merges both lists so multiple name (eg first and last) items arfe together
         name_matches = merge_lists(names, name_matches)
+        print(name_matches)
         # add input files redactions to stats file
         inp.add_redact(name_matches, "names")
 

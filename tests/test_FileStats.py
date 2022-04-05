@@ -34,7 +34,7 @@ def test_FileStats():
     # check formatted_stats_string function
     statsformatted_expected = (
             "Filename: filename\n"
-            "Redaction Indexes: {40,41,42,43,44,45,46,47,48,49}\n"
+            "Redaction Indexes: {40, 41, 42, 43, 44, 45, 46, 47, 48, 49}\n"
             "Redaction Stats:\n"
             "\tnames:   1\n"
             "\tgenders: 0\n"

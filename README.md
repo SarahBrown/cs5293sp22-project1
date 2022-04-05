@@ -8,7 +8,9 @@ To download and use package, follow the steps below:
 1. git clone https://github.com/SarahBrown/cs5293sp22-project1.git
 2. cd cs5293sp22-project1/
 3. pipenv install
-4. pipenv run python -m spacy download en_core_web_sm
+4. pipenv run python project1/nltk_modules.py
+* pipenv run python -m nltk.downloader punkt averaged_perceptron_tagger maxent_ne_chunker words
+* averaged_perceptron_tagger, maxent_ne_chunker, words'
 
 5. 
 pipenv run python redactor.py --input 'resources/*.txt' \
