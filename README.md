@@ -27,7 +27,7 @@ pipenv run python redactor.py --input 'resources/*.txt' \
 ### Readaction of Whitespace
 
 ## Concepts
-Concepts are a selected, singular word to represent an idea to be redacted. 
+
 
 ## Stats 
 
@@ -35,6 +35,12 @@ Concepts are a selected, singular word to represent an idea to be redacted.
 
 
 # Assumptions Made and Known Bugs
+## Assumptions About Names
+
+## Assumptions About Genders
+
+## Assumptions About Dates
+
 ## Assumptions About Phone Numbers
 Phone numbers are assumed to be formatted in standard US format. Supported formats are local 7 digit numbers and various forms of full US numbers. Also supported is the 1-800 format. See below for examples of supported formats.
 * xxx-xxxx
@@ -44,6 +50,10 @@ Phone numbers are assumed to be formatted in standard US format. Supported forma
 * +x-xxx-xxx-xxx
 * x-xxx-xxx-xxx
 
+## Assumptions About Addresses
+
+## Assumptions About Concepts
+Concepts are a selected, singular word to represent an idea to be redacted. 
 
 # Tests
 

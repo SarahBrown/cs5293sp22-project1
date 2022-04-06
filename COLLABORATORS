@@ -1,23 +1,25 @@
 Python Docs, https://docs.python.org/3/howto/argparse.html, argparse help
-https://stackoverflow.com/questions/59048736/spacy-how-to-get-position-of-entity-in-the-entire-document
-https://stackoverflow.com/questions/55921104/spacy-similarity-warning-evaluating-doc-similarity-based-on-empty-vectors
-https://github.com/explosion/spaCy/blob/master/spacy/glossary.py, glossary for spacy
-https://www.tutorialspoint.com/How-to-write-a-case-insensitive-Python-regular-expression-without-re-compile
-https://stackoverflow.com/questions/3519565/find-the-indexes-of-all-regex-matches, get indexes of all matches
-https://www.w3schools.com/python/gloss_python_regex_match.asp
-https://tutorial.eyehunts.com/python/python-multiline-f-string-example-code/
-https://grabthiscode.com/python/python-remove-non-letters-from-string
-https://stdcxx.apache.org/doc/stdlibug/26-1.html, example phone number formats
-https://regexpattern.com/phone-number/
-https://stackoverflow.com/questions/41752946/replacing-a-character-from-a-certain-index, 
-https://stackoverflow.com/questions/13213866/python-unicode-character-codes
-https://stackoverflow.com/questions/59799454/what-is-the-difference-between-stdout-and-stderr-in-c, double checked differencs between stdout and stderr
-https://www.w3schools.com/python/python_file_write.asp, create file to write to
-https://www.educba.com/lowercase-in-python/
-https://www.iluenglish.com/gender-in-english-masculine-and-feminine-words/
-https://www.tutorialspoint.com/How-do-we-use-re-finditer-method-in-Python-regular-expression
-https://www.keycdn.com/support/regex-cheatsheet
-https://stackoverflow.com/questions/42030333/nltk-converting-chunks-to-strings
-https://medium.com/@acrosson/extracting-names-emails-and-phone-numbers-5d576354baa
-https://stackoverflow.com/questions/62230139/github-actions-fails-when-nltk-punkt-is-needed
-https://www.ocpsoft.org/tutorials/regular-expressions/or-in-regex/
+Stackoverflow, https://stackoverflow.com/questions/59048736/spacy-how-to-get-position-of-entity-in-the-entire-document, spacy python ref get position of entity
+Stackoverflow, https://stackoverflow.com/questions/55921104/spacy-similarity-warning-evaluating-doc-similarity-based-on-empty-vectors, spacy python ref warning help
+Spacy Glossary, https://github.com/explosion/spaCy/blob/master/spacy/glossary.py, glossary for spacy
+Tutorialspoint, https://www.tutorialspoint.com/How-to-write-a-case-insensitive-Python-regular-expression-without-re-compile, python regex ref for ignoring case
+Stackoverflow, https://stackoverflow.com/questions/3519565/find-the-indexes-of-all-regex-matches, get indexes of all matches
+w3schools, https://www.w3schools.com/python/gloss_python_regex_match.asp, python and regex match ref
+Tutorial by EyeHunts, https://tutorial.eyehunts.com/python/python-multiline-f-string-example-code/, python ref for formmating output with a multiline f string
+GrabThisCode, https://grabthiscode.com/python/python-remove-non-letters-from-string, python ref for filtering out numbers from a string
+stdcxx, https://stdcxx.apache.org/doc/stdlibug/26-1.html, example phone number formats
+regexpattern, https://regexpattern.com/phone-number/, example phone number formats
+Stackoverflow, https://stackoverflow.com/questions/41752946/replacing-a-character-from-a-certain-index, python ref for how to most effectively replace indexes from a string
+Stackoverflow, https://stackoverflow.com/questions/13213866/python-unicode-character-codes, python reference for how to insert unicode character into string
+Stackoverflow, https://stackoverflow.com/questions/59799454/what-is-the-difference-between-stdout-and-stderr-in-c, double checked differencs between stdout and stderr
+w3schools, https://www.w3schools.com/python/python_file_write.asp, create file to write to
+educba, https://www.educba.com/lowercase-in-python/, Python reference for making things lowercase for ease of regex matching
+iluenglish, https://www.iluenglish.com/gender-in-english-masculine-and-feminine-words/, List of common gendered words in English
+Tutorialspoint, https://www.tutorialspoint.com/How-do-we-use-re-finditer-method-in-Python-regular-expression, Reference for using re.finditer
+keycdn, https://www.keycdn.com/support/regex-cheatsheet, Regex reference
+Stackoverflow, https://stackoverflow.com/questions/42030333/nltk-converting-chunks-to-strings, python nltk converting chunks to string ref
+Alexander Crosson, https://medium.com/@acrosson/extracting-names-emails-and-phone-numbers-5d576354baa, python ref helped understand phone numbers
+Stackoverflow, https://stackoverflow.com/questions/62230139/github-actions-fails-when-nltk-punkt-is-needed, nltk ref for github actions and nltk
+USPS, https://pe.usps.com/text/pub28/28apc_002.htm, list of suffix forms for postal addresses
+Stackoverflow, https://stackoverflow.com/questions/66821133/creating-rule-based-matching-with-spacy-and-python-for-detecting-addresses, python ref that helped understand how to implement address recognition (in english instead of german tho lol)
+ocpsoft, https://www.ocpsoft.org/tutorials/regular-expressions/or-in-regex/, regex ref for formatting many ORs

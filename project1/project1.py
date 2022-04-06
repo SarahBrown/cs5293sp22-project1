@@ -44,8 +44,7 @@ def redact_names(input_files):
                         found_name = chunk.leaves()[0][0]
                         if (re.search(r'[0-9]',found_name) == None): # contains no numbers
                             if (found_name not in ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]): # removes days of week abbreivations
-                                nltk_names.append(found_name)
-                            
+                                nltk_names.append(found_name)                            
                     
         # merges two lists for all names recognized by NER
         names = merge_lists(ENTS, PROPN_ENT)        
@@ -65,7 +64,6 @@ def redact_names(input_files):
         name_matches = find_regex(regex_names, inp.input_str, False)
         # merges both lists so multiple name (eg first and last) items arfe together
         name_matches = merge_lists(names, name_matches)
-        print(name_matches)
         # add input files redactions to stats file
         inp.add_redact(name_matches, "names")
 
@@ -97,7 +95,7 @@ def redact_dates(input_files):
     for inp in input_files:
         doc = nlp(inp.input_str)
         ent_dates = []
-        date_patterns = [r'[A-Z][a-z]{2}, [0-9]{1,2} [A-Z][a-z]{2} [0-9]{4}']
+        date_patterns = [r'[A-Z][a-z]{2}, [0-9]{1,2} [A-Z][a-z]{2} [0-9]{4}',r'[0-9]{1,2}[ ,/-]{1}[0-9]{1,2}[ ,/-]{1}[0-9]{2,4}']
 
         for ent in doc.ents:
             if (ent.label_ == "DATE"):

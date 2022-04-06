@@ -42,3 +42,4 @@ class FileStats:
             output_str = output_str[:index] + "\u2588" + output_str[index+1:]
         
         self.output_str = output_str
+        

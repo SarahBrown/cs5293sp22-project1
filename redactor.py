@@ -87,7 +87,7 @@ if (args.output):
         else:
             if (not os.path.exists(args.output)):
                 break
-            out_filename = f"{args.output}/{inp.file_name.split('/')[1]}.redacted"
+            out_filename = f"{args.output}/{inp.file_name.split('/')[-1]}.redacted"
             if os.path.exists(out_filename):
                 os.remove(out_filename)
             output_file = open(out_filename,"x")

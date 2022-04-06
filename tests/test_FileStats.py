@@ -42,5 +42,5 @@ def test_FileStats():
             "\tphones:  0\n"
             "\taddress: 0\n"
             "\tconcept: 0\n")
-    statsformatted_actual = test_stats.formatted_stats_string()
+    statsformatted_actual = test_stats.formatted_stats_string() # gets expected formatted string
     assert (statsformatted_actual == statsformatted_expected) # checks formatted string list matches expected
