@@ -24,7 +24,7 @@ For this project I used several packages from the standard library and some exte
 # Functions and Approach to Development
 This project uses various functions to filter to terms/concepts, redact information, and return output/stats data.
 
-## Readaction Flags
+## Redaction Flags
 This project uses argparse and a variety of arguments to process user input. The following are the flags used and their parameters:
 * --input. type=str, required=True, help="Glob of local files stored in resources folder."
 * --output. type=str, required=True, help="Output file or special files (stderr, stdout) to store redacted files."
@@ -36,7 +36,7 @@ This project uses argparse and a variety of arguments to process user input. The
 * --phones. action='store_true', help="Boolean flag to redact phones.
 * --address. action='store_true', help="Boolean flag to redact address.
 
-### Readaction of Whitespace
+### Redaction of Whitespace
 Whitespace is redacted between first and last names, e.g. John Smith. This is done to further redact information about the document. However, some address patterns do not redact whitespace between the street address and the City, State Zipcode portions of the address. This is done to avoid Regex errors when processing.
 
 ## Concepts
