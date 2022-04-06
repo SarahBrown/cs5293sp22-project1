@@ -22,37 +22,40 @@ def add_arguments():
                         help="Word that represents a concept to redact.")
                         
     parser.add_argument("--names", action='store_true', 
-                        help=".")
+                        help="Boolean flag to redact names.")
 
     parser.add_argument("--genders", action='store_true', 
-                        help=".")
+                        help="Boolean flag to redact genders.")
         
     parser.add_argument("--dates", action='store_true',  
-                        help=".")
+                        help="Boolean flag to redact dates.")
 
     parser.add_argument("--phones", action='store_true', 
-                        help=".")
+                        help="Boolean flag to redact phones.")
 
     parser.add_argument("--address", action='store_true', 
-                        help="Flag .")
+                        help="Boolean flag to redact address.")
         
+    # get and return args
     args = parser.parse_args()
-
     return args
 
 def get_inputfiles(input_glob):
+    """Function to process glob and add input files."""
     files = sorted(glob.glob(input_glob)) # reads in glob files and sorts them alphabetically for ease of debugging
     file_list = []
 
+    # opens each file in glob and creates a FileStats object to hold its details
     for f in files:
-        file = open(f, "r")
-        new_file = FileStats.FileStats(f, file.read())
-        file_list.append(new_file)
+        file = open(f, "r") 
+        new_file = FileStats.FileStats(f, file.read()) # creates FileStats obj
+        file_list.append(new_file) # adds to list of files
         file.close()
 
-    return file_list
+    return file_list # returns list
 
 def redact(args, input_file):
+    """Function to process args and redact requested redactions."""
     if (args.names): # checks names flag to see if true
         project1.redact_names(input_file)
 
@@ -72,37 +75,42 @@ def redact(args, input_file):
         project1.redact_concepts(input_file, args.concept)
     
     for inp in input_file:
-        inp.redact_output_str()
+        inp.redact_output_str() # perform redactions with indexes found in redact functions
 
+"""Automatic redactor to redact certain terms/concepts based on user input."""
+# adds arguments, inputfiles, and performs redaction
 args = add_arguments()
 input_files = get_inputfiles(args.input)
 redact(args, input_files)
 
+# processes the output flag
 if (args.output):
     for inp in input_files:
         if (args.output == 'stderr'):
-            sys.stderr.write(inp.output_str)
+            sys.stderr.write(inp.output_str) # writes to std error
         elif (args.output == 'stdout'):
-            sys.stdout.write(inp.output_str)
+            sys.stdout.write(inp.output_str) # writes to std output
         else:
-            if (not os.path.exists(args.output)):
-                break
-            out_filename = f"{args.output}/{inp.file_name.split('/')[-1]}.redacted"
+            if (not os.path.exists(args.output)): # checks that the output folder exists
+                os.mkdir(args.output)
+            out_filename = (f"{args.output}/{inp.file_name.split('/')[-1]}.redacted")
             if os.path.exists(out_filename):
                 os.remove(out_filename)
             output_file = open(out_filename,"x")
             output_file.write(inp.output_str)
             output_file.close()
 
+# processes the stats flag
 if (args.stats):
     if (args.stats == 'stderr' or args.stats == 'stdout'):
         for inp in input_files:
             if (args.stats == 'stderr'):
-                sys.stderr.write(inp.formatted_stats_string())
+                sys.stderr.write(inp.formatted_stats_string())  # writes to std error
             elif (args.stats == 'stdout'):
-                sys.stdout.write(inp.formatted_stats_string())
+                sys.stdout.write(inp.formatted_stats_string()) # writes to std output
     else:
-        out_filename = f"{args.stats}"
+        # creates and writes to stats file
+        out_filename = f"{args.stats}" 
         if os.path.exists(out_filename):
             os.remove(out_filename)
         output_file = open(out_filename,"x")

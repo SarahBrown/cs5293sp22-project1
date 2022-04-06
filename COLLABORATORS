@@ -23,3 +23,4 @@ Stackoverflow, https://stackoverflow.com/questions/62230139/github-actions-fails
 USPS, https://pe.usps.com/text/pub28/28apc_002.htm, list of suffix forms for postal addresses
 Stackoverflow, https://stackoverflow.com/questions/66821133/creating-rule-based-matching-with-spacy-and-python-for-detecting-addresses, python ref that helped understand how to implement address recognition (in english instead of german tho lol)
 ocpsoft, https://www.ocpsoft.org/tutorials/regular-expressions/or-in-regex/, regex ref for formatting many ORs
+Stackoverflow, https://stackoverflow.com/questions/61646185/how-can-i-download-nltk-corpora-via-requirements-txt-using-pip-install-r-req, how to download nltk models
