@@ -18,7 +18,7 @@ def add_arguments():
     parser.add_argument("--stats", type=str, 
                         help="Name of file or special files (stderr, stdout) to write summary of redaction process to.")
 
-    parser.add_argument("--concept", type=str, 
+    parser.add_argument("--concept", type=str,action="append",
                         help="Word that represents a concept to redact.")
                         
     parser.add_argument("--names", action='store_true', 

@@ -183,29 +183,29 @@ def redact_concepts(input_files, concept):
     """Function to redact concepts."""
     for inp in input_files:
         doc = nlp(inp.input_str)
-        nlp_concept = nlp(concept)
         similar = []
         sentences = []
         sent_added = set()
+        for c in concept:
+            nlp_concept = nlp(c)
+            # compares concept word to words in document for similarity
+            # if the similarity is above a threshold, adds to redactions
+            if(nlp_concept and nlp_concept.vector_norm): # checks for valid word vector
+                """Function to ."""
+                for token in doc:
+                    if (token and token.vector_norm): # checks for valid word vector
+                        simil = nlp_concept.similarity(token)
+                        if (simil > 0.5):
+                            #print(f"{token}--{simil}--{token.i}")
+                            similar.append([token.text, token.sent.start_char, token.sent.end_char]) # token text, sentence start char, sentence end char
 
-    # compares concept word to words in document for similarity
-    # if the similarity is above a threshold, adds to redactions
-    if(nlp_concept and nlp_concept.vector_norm): # checks for valid word vector
-        """Function to ."""
-        for token in doc:
-            if (token and token.vector_norm): # checks for valid word vector
-                simil = nlp_concept.similarity(token)
-                if (simil > 0.5):
-                    #print(f"{token}--{simil}--{token.i}")
-                    similar.append([token.text, token.sent.start_char, token.sent.end_char]) # token text, sentence start char, sentence end char
-
-    # only adds one redaction per sentence, there may be multiple concepts in a sentence but increases stats based on # of sentences
-    for similar_tok in similar:
-        """Function to ."""
-        if (similar_tok[1] not in sent_added):
-            sent_added.add(similar_tok[1])
-            sentences.append(similar_tok)
-    inp.add_redact(sentences, "concept")
+            # only adds one redaction per sentence, there may be multiple concepts in a sentence but increases stats based on # of sentences
+            for similar_tok in similar:
+                """Function to ."""
+                if (similar_tok[1] not in sent_added):
+                    sent_added.add(similar_tok[1])
+                    sentences.append(similar_tok)
+        inp.add_redact(sentences, "concept")
 
 def find_spacy_matches(input_str, patterns):
     """Function to make a spacy pattern and find matches."""

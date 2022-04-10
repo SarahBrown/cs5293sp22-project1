@@ -29,7 +29,7 @@ This project uses argparse and a variety of arguments to process user input. The
 * --input. type=str, required=True, help="Glob of local files stored in resources folder."
 * --output. type=str, required=True, help="Output file or special files (stderr, stdout) to store redacted files."
 * --stats.type=str, help="Word that represents a concept to redact."
-* --concept. type=str, help="Word that represents a concept to redact.
+* --concept. type=str, action="append",help="Word that represents a concept to redact.
 * --names. action='store_true', help="Boolean flag to redact names.
 * --genders. action='store_true', help="Boolean flag to redact genders.
 * --dates. action='store_true', help="Boolean flag to redact dates.
